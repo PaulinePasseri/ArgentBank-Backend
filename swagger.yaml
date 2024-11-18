@@ -117,6 +117,17 @@ paths:
           description: Transactions retrieved successfully
           schema:
             $ref: '#/definitions/ApiResponse'
+          examples:
+            application/json:
+              status: 200
+              message: "Transactions retrieved successfully"
+              body:
+                transactions:
+                  - id: "txn123"
+                    date: "2024-11-01T14:30:00Z"
+                    description: "Golden Sun Bakery"
+                    amount: 8.00
+                    balance: 298.00
         '400':
           description: Invalid query parameters
         '401':
@@ -145,6 +156,20 @@ paths:
           description: Transaction retrieved successully
           schema:
             $ref: '#/definitions/ApiResponse'
+          examples:
+            application/json:
+              status: 200
+              message: "Transaction retrieved successfully"
+              body:
+                id: "txn123"
+                date: "2024-11-01T14:30:00Z"
+                description: 
+                  name: "Golden Sun Bakery"
+                  category: "Food"
+                  transactionType: "Electronic"
+                  note: "Lorem ipsum"
+                amount: 8.00
+                  
         '400':
           description: Invalid Fields
         '401':
@@ -178,6 +203,10 @@ paths:
           description: Transaction edited successfully 
           schema:
             $ref: '#/definitions/ApiResponse'
+          examples:
+            application/json:
+              status: 200
+              message: "Transaction updated successfully"
         '400':
           description: Invalid Fields
         '401':
