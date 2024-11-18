@@ -65,109 +65,229 @@ paths:
         - User Module
       summary: User Profile API
       description: API for fetching a user profile
-      #produces:
-       # - application/json
       responses:
         '200':
-          description: User profile retrieved successully
+          description: User profile retrieved successfully
           schema:
             $ref: '#/definitions/ApiResponse'
+          examples:
+            application/json:
+              status: 200
+              message: "Profile retrieved successfully"
+              body:
+                id: "12345"
+                email: "user@example.com"
+                userName: "johndoe"
         '400':
-          description: Invalid Fields
+          description: Invalid request parameters
+          examples:
+            application/json:
+              status: 400
+              message: "Invalid request fields"
+        '401':
+          description: Unauthorized access, token missing or invalid
+          examples:
+            application/json:
+              status: 401
+              message: "Unauthorized: Invalid or missing token"
         '500':
-          description: Internal Server Error
+          description: Internal server error
+          examples:
+            application/json:
+              status: 500
+              message: "An unexpected error occurred"
     put:
       security:
         - Bearer: []
       tags:
         - User Module
-      summary: User Profile API
-      description: API for updating a user profile
+      summary: Update User Profile
+      description: API for updating user profile attributes
       parameters:
         - in: body
           name: body
-          description: Update user profile attributes
+          description: Updated user profile attributes
           required: true
           schema:
             $ref: '#/definitions/UserProfile'
-      produces:
-        - application/json
       responses:
         '200':
-          description: User profile retrieved successully
+          description: User profile updated successfully
           schema:
             $ref: '#/definitions/ApiResponse'
+          examples:
+            application/json:
+              status: 200
+              message: "Profile updated successfully"
         '400':
-          description: Invalid Fields
+          description: Invalid input fields
+          examples:
+            application/json:
+              status: 400
+              message: "Invalid request body"
+        '401':
+          description: Unauthorized access, token missing or invalid
+          examples:
+            application/json:
+              status: 401
+              message: "Unauthorized: Invalid or missing token"
         '500':
-          description: Internal Server Error
+          description: Internal server error
+          examples:
+            application/json:
+              status: 500
+              message: "An unexpected error occurred"
   /user/transactions:
     get:
       security:
         - Bearer: []
       tags:
         - Transaction Module
-      summary: Returns all transactions of current month
-      description: API for fetching user transactions
-      operationId: getTransactions
-      produces:
-        - application/json
+      summary: Fetch User Transactions
+      description: Returns all transactions for the current month
       responses:
         '200':
-          description: User transactions retrieved successully
+          description: Transactions retrieved successfully
           schema:
             $ref: '#/definitions/ApiResponse'
-  /user/transactions/{transactionId}:
-    get:
-      security:
-        - Bearer: []
-      tags:
-        - Transaction Module
-      summary: Returns a specific transaction
-      parameters:
-        - name: transactionId
-          in: path
-          required: true
-          schema:
-            type: string
-      description: API for fetching a specific transaction
-      operationId: getTransactionId
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Transaction retrieved successully
-          schema:
-            $ref: '#/definitions/ApiResponse'
-    put:
-      security:
-        - Bearer: []
-      tags:
-        - Transaction Module
-      summary: Edits transaction details
-      description: API for editing category and notes of a transaction
-      parameters:
-        - name: transactionId
-          in: path
-          required: true
-          type: string
-        - in: body
-          name: body
-          description: Updated transaction details
-          required: true
-          schema:
-            $ref: '#/definitions/TransactionUpdateInput'
-      produces:
-        - application/json
-      responses:
-        '200':
-          description: Transaction edited successfully 
-          schema:
-            $ref: '#/definitions/ApiResponse'
+          examples:
+            application/json:
+              status: 200
+              message: "Transactions retrieved successfully"
+              body:
+                transactions:
+                  - id: "txn123"
+                    date: "2024-11-01T14:30:00Z"
+                    description: "Grocery shopping"
+                    amount: 50.75
+                    category: "Food"
+                    transactionType: "Debit"
         '400':
-          description: Invalid Fields
+          description: Invalid query parameters
+          examples:
+            application/json:
+              status: 400
+              message: "Invalid query parameters"
+        '401':
+          description: Unauthorized access, token missing or invalid
+          examples:
+            application/json:
+              status: 401
+              message: "Unauthorized: Invalid or missing token"
         '500':
-          description: Internal Server Error
+          description: Internal server error
+          examples:
+            application/json:
+              status: 500
+              message: "An unexpected error occurred"
+
+/user/transactions/{transactionId}:
+  get:
+    security:
+      - Bearer: []
+    tags:
+      - Transaction Module
+    summary: Fetch Specific Transaction
+    parameters:
+      - name: transactionId
+        in: path
+        required: true
+        description: ID of the transaction
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Transaction retrieved successfully
+        schema:
+          $ref: '#/definitions/ApiResponse'
+        examples:
+          application/json:
+            status: 200
+            message: "Transaction retrieved successfully"
+            body:
+              id: "txn123"
+              date: "2024-11-01T14:30:00Z"
+              description: "Grocery shopping"
+              amount: 50.75
+              category: "Food"
+              transactionType: "Debit"
+      '400':
+        description: Invalid transaction ID
+        examples:
+          application/json:
+            status: 400
+            message: "Invalid transaction ID"
+      '404':
+        description: Transaction not found
+        examples:
+          application/json:
+            status: 404
+            message: "Transaction not found"
+      '401':
+        description: Unauthorized access, token missing or invalid
+        examples:
+          application/json:
+            status: 401
+            message: "Unauthorized: Invalid or missing token"
+      '500':
+        description: Internal server error
+        examples:
+          application/json:
+            status: 500
+            message: "An unexpected error occurred"
+
+  put:
+    security:
+      - Bearer: []
+    tags:
+      - Transaction Module
+    summary: Edit Transaction
+    parameters:
+      - name: transactionId
+        in: path
+        required: true
+        description: ID of the transaction to edit
+        schema:
+          type: string
+      - in: body
+        name: body
+        description: Updated transaction details
+        required: true
+        schema:
+          $ref: '#/definitions/TransactionUpdateInput'
+    responses:
+      '200':
+        description: Transaction updated successfully
+        schema:
+          $ref: '#/definitions/ApiResponse'
+        examples:
+          application/json:
+            status: 200
+            message: "Transaction updated successfully"
+      '400':
+        description: Invalid transaction details
+        examples:
+          application/json:
+            status: 400
+            message: "Invalid transaction details"
+      '401':
+        description: Unauthorized access, token missing or invalid
+        examples:
+          application/json:
+            status: 401
+            message: "Unauthorized: Invalid or missing token"
+      '404':
+        description: Transaction not found
+        examples:
+          application/json:
+            status: 404
+            message: "Transaction not found"
+      '500':
+        description: Internal server error
+        examples:
+          application/json:
+            status: 500
+            message: "An unexpected error occurred"
 
       
 securityDefinitions:
